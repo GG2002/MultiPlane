@@ -55,9 +55,9 @@ export default class Game extends Phaser.Scene {
     }
 
     create() {
-        let bgm = this.sound.add('bgm');
-        let loopMarker = { name: 'loop', config: { loop: true } };
-        bgm.addMarker(loopMarker);
+        // let bgm = this.sound.add('bgm');
+        // let loopMarker = { name: 'loop', config: { loop: true } };
+        // bgm.addMarker(loopMarker);
         // bgm.play('loop');
         let enemies = this.physics.add.group({
             classType: Enemy
@@ -106,8 +106,9 @@ export default class Game extends Phaser.Scene {
 
         this.player = this.physics.add.image(0, 500, 'plane');
         this.player.setDepth(2)
-        this.player.setCollideWorldBounds(true);
         this.player.setCircle(40)
+        this.player.setCollideWorldBounds(true);
+        this.player.setBounce(1);
 
         // console.log(enemy, this.player)
         this.player.setDataEnabled()
@@ -135,7 +136,7 @@ export default class Game extends Phaser.Scene {
 
         this.onecho = this.physics.add.group({
             classType: Onecho,
-            maxSize: 20,
+            maxSize: 15,
             runChildUpdate: true,
         })
 
@@ -151,10 +152,6 @@ export default class Game extends Phaser.Scene {
             runChildUpdate: true,
         })
 
-        this.onecho.get(0, 0, 'onecho_large').init(this, 'onecho_small', this.player);
-        this.office.get(400, 500, 'office').init();
-        this.media.get(-400, 700, 'media_out').init(this, 'media_inside', this.player);
-
         this.cameras.main.startFollow(this.player, true);
         this.cameras.main.setDeadzone(50, 50);
         this.cameras.main.setZoom(0.5);
@@ -167,6 +164,18 @@ export default class Game extends Phaser.Scene {
         this.physics.add.overlap(this.bullets, this.enemies, this.hitEnemy, null, this);
         this.physics.add.collider(this.enemyBullets, this.player, this.hittedByEnemy, null, this);
         this.physics.add.collider(this.onecho, this.player, this.hittedByBarrier, null, this);
+        this.physics.add.collider(this.office, this.player, this.hittedByBarrier, null, this);
+
+
+        // this.onecho.get(0, 0, 'onecho_large').init(this, 'onecho_small', this.player);
+        for (let i = 0; i < this.onecho.maxSize; i++) {
+            this.onecho.get(Phaser.Math.Between(-0,0), Phaser.Math.Between(-400,400), 'onecho_large').init(this, 'onecho_small', this.player);
+        }
+        for (let i = 0; i < this.office.maxSize; i++) {
+            this.office.get(400, 500, 'office').init();
+        }
+        this.media.get(-400, 700, 'media_out').init(this, 'media_inside', this.player);
+
     }
 
     update(time, delta) {
@@ -263,13 +272,15 @@ export default class Game extends Phaser.Scene {
                 // 'ScrollY: ' + cam.scrollY,
                 // 'MidX: ' + cam.midPoint.x,
                 // 'MidY: ' + cam.midPoint.y,
-                'this.player x:' + this.player.x,
-                'this.player y:' + this.player.y,
-                'this.player angle:' + Math.cos(this.angle),
-                'this.player vx:' + this.player.body.velocity.x,
-                'this.player vy:' + this.player.body.velocity.y,
-                'x: ' + pointer.worldX,
-                'y: ' + pointer.worldY,
+                // 'this.player x:' + this.player.x,
+                // 'this.player y:' + this.player.y,
+                // 'this.player angle:' + this.angle,
+                // 'this.player vangle' + Phaser.Math.RadToDeg(Math.atan(this.player.body.velocity.y / this.player.body.velocity.x)),
+                // 'this.player vx:' + this.player.body.velocity.x,
+                // 'this.player vy:' + this.player.body.velocity.y,
+                'this.player speed:' + this.player.body.speed,
+                // 'x: ' + pointer.worldX,
+                // 'y: ' + pointer.worldY,
                 // 'isDown: ' + pointer.isDown,
                 // 'rightButtonDown: ' + pointer.rightButtonDown()
             ]);
@@ -323,7 +334,50 @@ export default class Game extends Phaser.Scene {
         this.physics.world.disableBody(bullet.body);
     }
 
-    hittedByBarrier(barrier, player) {
-        console.log(arguments)
+    hittedByBarrier(player, barrier) {
+        barrier.setVelocity(barrier.vx, barrier.vy);
+        let dx = player.x - barrier.x;
+        let dy = player.y - barrier.y;
+        let vx = player.data.get('vx');
+        let vy = player.data.get('vy');
+        let angle1 = this.v_acrtan(vx, vy);
+        let angle2 = this.d_arctan(dx, dy);
+        let speed = player.body.speed;
+        let vBounce = Math.abs(1.7 * speed * Math.cos(angle1 - angle2));
+
+        vBounce = vBounce > 200 ? vBounce : 200;
+
+        if (vx < 0) {
+            player.data.set('vx', vx + Math.abs(vBounce * Math.cos(angle2)));
+        } else {
+            player.data.set('vx', vx - Math.abs(vBounce * Math.cos(angle2)));
+        }
+        if (vy < 0) {
+            player.data.set('vy', vy + Math.abs(vBounce * Math.sin(Math.abs(angle2))));
+        } else {
+            player.data.set('vy', vy - Math.abs(vBounce * Math.sin(Math.abs(angle2))));
+        }
+        player.setVelocity(vx - vBounce * Math.cos(angle2), vy - vBounce * Math.sin(Math.abs(angle2)));
+    }
+
+    d_arctan(dx, dy) {
+        let angle;
+        if (dx > 0) {
+            angle = Math.atan(dy / dx) + Math.PI;
+        } else {
+            angle = Math.atan(dy / dx);
+        }
+        return angle < Math.PI ? angle : angle - 2 * Math.PI;
+    }
+
+    v_acrtan(vx, vy) {
+        let angle;
+        if (vx > 0) {
+            angle = Math.atan(vy / vx);
+        } else {
+            angle = Math.atan(vy / vx);
+            angle = angle > 0 ? angle - Math.PI : angle + Math.PI;
+        }
+        return angle;
     }
 }

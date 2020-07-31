@@ -16,45 +16,30 @@ export default class Media extends Phaser.Physics.Arcade.Image {
         // this.eye.setVelocity(Phaser.Math.Between(-10, 10), Phaser.Math.Between(-500, 500));
         // this.eye.setRotation(-Math.atan((player.x - this.x)/ (player.y - this.y)));
 
-        this.graphics = scene.add.graphics();
+        // scene.graphics = scene.add.graphics();
 
-        this.follower = { t: 0, vec: new Phaser.Math.Vector2() };
+        scene.curve = new Phaser.Curves.Spline([164, 446, 274, 542, 412, 457, 522, 541, 664, 464]);
 
-        this.path = new Phaser.Curves.Path(50, 500);
+        scene.graphics.lineStyle(1, 0x000000, 1);
 
-        this.path.splineTo([164, 446, 274, 542, 412, 457, 522, 541, 664, 464]);
+        scene.curve.draw(scene.graphics, 64);
+    
+        scene.graphics.fillStyle(0x00ff00, 1);
 
-        this.path.lineTo(700, 300);
+        this.eye2=scene.add.follower(scene.curve,50,400,texture);
 
-        this.path.lineTo(600, 350);
-
-        this.path.ellipseTo(200, 100, 100, 250, false, 0);
-
-        this.path.cubicBezierTo(222, 119, 308, 107, 208, 368);
-
-        this.path.ellipseTo(60, 60, 0, 360, true);
-
-        scene.tweens.add({
-            targets: this.follower,
-            t: 1,
-            ease: 'Sine.easeInOut',
-            duration: 40000,
-            yoyo: true,
-            repeat: -1
-        });
+        this.eye2.startFollow(4000);
+        // scene.tweens.add({
+        //     targets: this.follower,
+        //     t: 1,
+        //     ease: 'Sine.easeInOut',
+        //     duration: 40000,
+        //     yoyo: true,
+        //     repeat: -1
+        // });
     }
 
     update(time, delta) {
-        this.graphics.clear();
-        this.graphics.lineStyle(2, 0xffffff, 1);
-
-        this.path.draw(this.graphics);
-
-        this.path.getPoint(this.follower.t, this.follower.vec);
-
-        this.graphics.fillStyle(0xff0000, 1);
-        this.graphics.fillCircle(this.follower.vec.x, this.follower.vec.y, 12);
-
         if (time > this.last) {
             this.last = time + 100;
             this.hitCheck = true;
