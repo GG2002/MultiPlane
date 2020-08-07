@@ -41,16 +41,20 @@ export default class Game extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('bg', 'assets/231.png');
+        this.load.image('bg', 'assets/18.jpg');
         this.load.image('plane', 'assets/planeH.png');
+        this.load.image('anchor', 'assets/anchor.png');
         this.load.image('bullet', 'assets/bullet.png');
         this.load.image('onecho_large', 'assets/onecho_large.png');
         this.load.image('onecho_small', 'assets/onecho_small.png');
         this.load.image('media_inside', 'assets/media_inside.png');
         this.load.image('media_out', 'assets/media_out.png');
         this.load.image('office', 'assets/office.png');
+        this.load.spritesheet('workshop', 'assets/yan.png', { frameWidth: 216, frameHeight: 220 });
+        this.load.spritesheet('editor', 'assets/editor.png', { frameWidth: 222.355, frameHeight: 125 });
+        this.load.image('editor1', 'assets/Scene1.gif');
         this.load.audio('fire', 'assets/sfx/ship_fire.wav');
-        this.load.audio('bgm', 'assets/sfx/TechWorldUnite.wav');
+        // this.load.audio('bgm', 'assets/sfx/TechWorldUnite.wav');
         this.load.audio('explosion', 'assets/sfx/explosion01.wav');
     }
 
@@ -59,33 +63,41 @@ export default class Game extends Phaser.Scene {
         // let loopMarker = { name: 'loop', config: { loop: true } };
         // bgm.addMarker(loopMarker);
         // bgm.play('loop');
-        let enemies = this.physics.add.group({
+        this.enemies = this.physics.add.group({
             classType: Enemy
         })
         this.ws = new WebSocket("ws://59.110.40.182:2002");
-        // this.ws = new WebSocket("ws://127.0.0.1:2347");
+        // this.ws = new WebSocket("ws://127.0.0.1:2002");
         // this.ws = new WebSocket("ws://127.0.0.1:2000");
         this.ws.onopen = function () {
         };
-        this.ws.onmessage = function (e) {
-            const { x, y, angle, name, fire } = JSON.parse(e.data);
-            let enemyExisted = false;
+        this.ws.onmessage = e => {
+            let reader = new FileReader();
+            reader.onload = () => {
+                let buffer = new Float32Array(reader.result);
+                const [x, y, angle, fire, name] = buffer;
+                // console.log(buffer);
+                let enemyExisted = false;
 
-            enemies.children.iterate(child => {
-                if (child != null) {
-                    const enemy = child;
-                    if (enemy.name == name) {
-                        enemyExisted = true;
-                        enemy.change(x, y, angle);
-                        enemy.fire = fire;
+                this.enemies.children.iterate(child => {
+                    if (child != null) {
+                        const enemy = child;
+                        if (enemy.name == name) {
+                            enemyExisted = true;
+                            enemy.change(x, y, angle);
+                            enemy.fire = fire;
+                        }
                     }
-
+                })
+                if (!enemyExisted) {
+                    let enemy = this.enemies.get(x, y, 'plane');
+                    enemy.init(angle, name);
                 }
-            })
-            if (!enemyExisted) {
-                let enemy = enemies.get(x, y, 'plane');
-                enemy.init(angle, name);
             }
+            reader.readAsArrayBuffer(e.data);
+            // console.info(reader.result)
+            // const { x, y, angle, name, fire } = JSON.parse(e.data);
+
         };
         // let enemy = enemies.get(0, 100, 'plane');
         // enemy.setDepth(2)
@@ -93,12 +105,12 @@ export default class Game extends Phaser.Scene {
         // enemy.setCircle(40);
         // enemy.setAngle(180)
         // enemy.fire = true
-        this.enemies = enemies;
+
 
         this.cameras.main.setBounds(-4096, -4096, 8192, 8192);
         this.physics.world.setBounds(-4096, -4096, 8192, 8192);
-        for (let i = -4096; i < 4096; i += 300) {
-            for (let j = -4096; j < 4096; j += 300) {
+        for (let i = -4096; i < 4096; i += 1024) {
+            for (let j = -4096; j < 4096; j += 1024) {
                 this.add.image(i, j, 'bg').setOrigin(0);
             }
         }
@@ -136,13 +148,13 @@ export default class Game extends Phaser.Scene {
 
         this.onecho = this.physics.add.group({
             classType: Onecho,
-            maxSize: 15,
+            maxSize: 5,
             runChildUpdate: true,
         })
 
         this.office = this.physics.add.group({
             classType: Office,
-            maxSize: 20,
+            maxSize: 10,
             runChildUpdate: true,
         })
 
@@ -152,27 +164,62 @@ export default class Game extends Phaser.Scene {
             runChildUpdate: true,
         })
 
+
+        this.anims.create({
+            key: 'fly',
+            frames: this.anims.generateFrameNumbers('workshop', { start: 0, end: 3 }),
+            frameRate: 24,
+            repeat: -1,
+        })
+        let workshop = this.physics.add.sprite(100, 500, 'workshop');
+        workshop.anims.play('fly');
+        workshop.setVelocity(200, -200);
+
+        this.anims.create({
+            key: 'cat',
+            frames: this.anims.generateFrameNumbers('editor', { start: 0, end: 33 }),
+            frameRate: 24,
+            repeat: -1,
+        })
+        let editor = this.physics.add.sprite(100, 600, 'editor');
+        editor.anims.play('cat');
+        // editor.setVelocity(300,0)
+        editor.setScale(1.5)
+
+        this.anchor = this.physics.add.image(0, 0, 'anchor');
+        this.anchor.setScale(0.015, 0.015);
+        this.anchor.setDepth(3);
+        this.anchor.setDataEnabled();
+        this.anchor.data.set('angle', 0);
+        this.anchor.data.set('cx', 0);
+        this.anchor.data.set('cy', 0);
+
         this.cameras.main.startFollow(this.player, true);
         this.cameras.main.setDeadzone(50, 50);
         this.cameras.main.setZoom(0.5);
 
-        this.text = this.add.text(32, 32).setScrollFactor(0).setFontSize(60).setColor('#000');;
+        this.text = this.add.text(32, 32).setScrollFactor(0).setFontSize(60).setColor('#fff');;
         this.fireKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.cursors = this.input.keyboard.createCursorKeys();
         this.graphics = this.add.graphics()
 
         this.physics.add.overlap(this.bullets, this.enemies, this.hitEnemy, null, this);
-        this.physics.add.collider(this.enemyBullets, this.player, this.hittedByEnemy, null, this);
+        this.physics.add.overlap(this.bullets, this.office, this.hitEnemy, null, this);
+        this.physics.add.overlap(this.bullets, this.onecho, this.hitEnemy, null, this);
+        this.physics.add.overlap(this.enemyBullets, this.player, this.hittedByEnemy, null, this);
+        this.physics.add.overlap(this.enemyBullets, this.office, this.hittedByEnemy, null, this);
+        this.physics.add.overlap(this.enemyBullets, this.onecho, this.hittedByEnemy, null, this);
         this.physics.add.collider(this.onecho, this.player, this.hittedByBarrier, null, this);
         this.physics.add.collider(this.office, this.player, this.hittedByBarrier, null, this);
 
 
         // this.onecho.get(0, 0, 'onecho_large').init(this, 'onecho_small', this.player);
         for (let i = 0; i < this.onecho.maxSize; i++) {
-            this.onecho.get(Phaser.Math.Between(-0,0), Phaser.Math.Between(-400,400), 'onecho_large').init(this, 'onecho_small', this.player);
+            let onecho = this.onecho.get(Phaser.Math.Between(-0, 0), Phaser.Math.Between(-0, 0), 'onecho_large').init(this, 'onecho_small', this.player);
+            this.physics.add.collider(onecho.ball, this.player, this.hittedByBarrierBall, null, this);
         }
         for (let i = 0; i < this.office.maxSize; i++) {
-            this.office.get(400, 500, 'office').init();
+            this.office.get(Phaser.Math.Between(-0, 0), Phaser.Math.Between(-0, 0), 'office').init();
         }
         this.media.get(-400, 700, 'media_out').init(this, 'media_inside', this.player);
 
@@ -190,7 +237,6 @@ export default class Game extends Phaser.Scene {
                     this.bullets.remove(bullet);
                 }
             }
-
         })
         this.enemyBullets.children.iterate(child => {
             const bullet = child;
@@ -200,41 +246,69 @@ export default class Game extends Phaser.Scene {
                     this.enemyBullets.remove(bullet);
                 }
             }
-
+        })
+        this.onecho.children.iterate(child => {
+            let onecho = child;
+            if (Math.abs(onecho.x) > 4096) {
+                onecho.setPosition(Phaser.Math.Between(-4096, 4096), onecho.y > 0 ? -4096 : 4096);
+            }
+            if (Math.abs(onecho.y) > 4096) {
+                onecho.setPosition(onecho.x > 0 ? -4096 : 4096, Phaser.Math.Between(-4096, 4096));
+            }
+            if (!onecho.visible) {
+                onecho.setPosition(Phaser.Math.Between(-4096, 4096), onecho.y > 0 ? -4096 : 4096);
+            }
+        })
+        this.office.children.iterate(child => {
+            let office = child;
+            if (Math.abs(office.x) > 4096) {
+                office.setPosition(Phaser.Math.Between(-4096, 4096), office.y > 0 ? -4096 : 4096);
+            }
+            if (Math.abs(office.y) > 4096) {
+                office.setPosition(office.x > 0 ? -4096 : 4096, Phaser.Math.Between(-4096, 4096));
+            }
+            if (!office.visible) {
+                office.setPosition(Phaser.Math.Between(-4096, 4096), office.y > 0 ? -4096 : 4096);
+            }
         })
 
         this.player.setVelocity(0);
 
         //鼠标导航灰机
-        if (pointer.isDown) {
-
-            //检测光标是否移动，未移动则保持加速度，移动则更新
+        // if (pointer.isDown) 
+        {
+            let dx, dy, d, px, py;
+            //检测光标是否移动，未移动则由相机的相对坐标求得光标的坐标，移动则更新光标的坐标
             if (this.player.data.get('sx') == pointer.worldX && this.player.data.get('sy') == pointer.worldY) {
-                this.ax = this.player.data.get('ax');
-                this.ay = this.player.data.get('ay');
-                this.vx = this.player.data.get('vx') + this.ax;
-                this.vy = this.player.data.get('vy') + this.ay;
-                this.maxVelocity = this.player.data.get('maxVelocity');
+                px = this.anchor.data.get('cx') + cam.midPoint.x;
+                py = this.anchor.data.get('cy') + cam.midPoint.y;
             } else {
-                let dx = pointer.worldX - this.player.x;
-                let dy = pointer.worldY - this.player.y;
-                let d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-                this.maxVelocity = d * 1.5 > this.MAXVELOCITY ? this.MAXVELOCITY : d * 1.5
-                if (this.maxVelocity < this.player.data.get('maxVelocity')) {
-                    this.maxVelocity = this.maxVelocity > this.MINVELOCITY ? this.maxVelocity : this.MINVELOCITY;
-                }
-                this.ax = dx / this.ACCELERATE;
-                this.ay = dy / this.ACCELERATE;
-                this.vx = this.player.data.get('vx') + this.ax;
-                this.vy = this.player.data.get('vy') + this.ay;
-                this.player.data.set('ax', this.ax);
-                this.player.data.set('ay', this.ay);
-                this.player.data.set('sx', pointer.worldX);
-                this.player.data.set('sy', pointer.worldY);
-                this.player.data.set('maxVelocity', this.maxVelocity)
+                px = pointer.worldX;
+                py = pointer.worldY;
+                this.anchor.data.set('cx', px - cam.midPoint.x);
+                this.anchor.data.set('cy', py - cam.midPoint.y);
             }
+            dx = px - this.player.x;
+            dy = py - this.player.y;
+            d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+            this.maxVelocity = d * 1.5 > this.MAXVELOCITY ? this.MAXVELOCITY : d * 1.5
+            if (this.maxVelocity < this.player.data.get('maxVelocity')) {
+                this.maxVelocity = this.maxVelocity > this.MINVELOCITY ? this.maxVelocity : this.MINVELOCITY;
+            }
+            this.ax = dx / this.ACCELERATE;
+            this.ay = dy / this.ACCELERATE;
+            this.vx = this.player.data.get('vx') + this.ax;
+            this.vy = this.player.data.get('vy') + this.ay;
+            this.player.data.set('ax', this.ax);
+            this.player.data.set('ay', this.ay);
+            this.player.data.set('sx', pointer.worldX);
+            this.player.data.set('sy', pointer.worldY);
+            this.player.data.set('maxVelocity', this.maxVelocity)
             this.player.data.set('vx', this.vx);
             this.player.data.set('vy', this.vy);
+            this.anchor.setPosition(px, py);
+            this.anchor.setAngle(this.anchor.data.get('angle') + 10);
+            this.anchor.data.set('angle', this.anchor.angle);
 
             // //检测灰机速度
             let v = Math.sqrt(Math.pow(this.vx, 2) + Math.pow(this.vy, 2));
@@ -260,9 +334,24 @@ export default class Game extends Phaser.Scene {
             this.player.setVelocityX(this.vx);
             this.player.setVelocityY(this.vy);
             this.player.setAngle(this.angle);
+            if (Math.abs(this.player.x) >= Math.abs(this.physics.world.bounds.x) - 44) {
+                console.log(1);
+                if (this.player.x < 0) {
+                    this.player.data.set('vx', this.vx > 0 ? this.vx : -0.7 * this.vx);
+                } else {
+                    this.player.data.set('vx', this.vx < 0 ? this.vx : -0.7 * this.vx);
+                }
+            }
+            if (Math.abs(this.player.y) >= Math.abs(this.physics.world.bounds.y) - 44) {
+                if (this.player.y < 0) {
+                    this.player.data.set('vy', this.vy > 0 ? this.vy : -0.7 * this.vy);
+                } else {
+                    this.player.data.set('vy', this.vy < 0 ? this.vy : -0.7 * this.vy);
+                }
+            }
 
             this.graphics.clear()
-            this.graphics.lineStyle(2, 0xff0000)
+            this.graphics.lineStyle(4, 0xff0000)
             this.graphics.lineBetween(this.player.x, this.player.y, this.player.x + this.ax * this.ACCELERATE, this.player.y + this.ay * this.ACCELERATE)
         }
 
@@ -272,12 +361,13 @@ export default class Game extends Phaser.Scene {
                 // 'ScrollY: ' + cam.scrollY,
                 // 'MidX: ' + cam.midPoint.x,
                 // 'MidY: ' + cam.midPoint.y,
-                // 'this.player x:' + this.player.x,
-                // 'this.player y:' + this.player.y,
+                'this.player x:' + this.player.x,
+                'this.player y:' + this.player.y,
+                'this.world boundx' + this.physics.world.bounds.x,
                 // 'this.player angle:' + this.angle,
                 // 'this.player vangle' + Phaser.Math.RadToDeg(Math.atan(this.player.body.velocity.y / this.player.body.velocity.x)),
-                // 'this.player vx:' + this.player.body.velocity.x,
-                // 'this.player vy:' + this.player.body.velocity.y,
+                'this.player vx:' + this.player.body.velocity.x,
+                'this.player vy:' + this.player.body.velocity.y,
                 'this.player speed:' + this.player.body.speed,
                 // 'x: ' + pointer.worldX,
                 // 'y: ' + pointer.worldY,
@@ -310,13 +400,21 @@ export default class Game extends Phaser.Scene {
 
         if (this.ws.readyState == 1) {
             if (this.fire || time > this.player.data.get('sendCoordinate')) {
-                this.ws.send(JSON.stringify({
-                    'x': this.player.x,
-                    'y': this.player.y,
-                    'angle': this.angle,
-                    'fire': this.fire
-                }))
-                this.player.data.set('sendCoordinate', time + 60)
+                let buffer = new ArrayBuffer(16);
+                let msg = new Float32Array(buffer);
+                msg[0] = this.player.x;
+                msg[1] = this.player.y;
+                msg[2] = this.angle;
+                msg[3] = this.fire;
+                // let msg=new Blob([JSON.stringify({
+                //     'x': this.player.x,
+                //     'y': this.player.y,
+                //     'angle': this.angle,
+                //     'fire': this.fire
+                // })]);
+                this.ws.send(msg);
+                // console.log(msg);
+                this.player.data.set('sendCoordinate', time + 10)
             }
         }
 
@@ -334,8 +432,16 @@ export default class Game extends Phaser.Scene {
         this.physics.world.disableBody(bullet.body);
     }
 
+    hittedByBarrierBall(ball, player) {
+        this.hittedByCircle(player, ball);
+    }
+
     hittedByBarrier(player, barrier) {
         barrier.setVelocity(barrier.vx, barrier.vy);
+        this.hittedByCircle(player, barrier);
+    }
+
+    hittedByCircle(player, barrier) {
         let dx = player.x - barrier.x;
         let dy = player.y - barrier.y;
         let vx = player.data.get('vx');

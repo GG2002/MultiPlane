@@ -1,6 +1,7 @@
 <?php
 
 use Workerman\Worker;
+use Workerman\Protocols\Websocket;
 
 require_once 'D:\\wamp64\\www\\vendor\\autoload.php';
 
@@ -13,6 +14,7 @@ function handle_connection($connection)
     global $text_worker, $global_uid,$player;
     // 为这个连接分配一个uid
     $connection->uid = ++$global_uid;
+    $connection->websocketType = Websocket::BINARY_TYPE_ARRAYBUFFER;
     $player[$connection->uid]=NULL;
 }
 
@@ -21,20 +23,26 @@ function handle_message($connection, $data)
 {
     global $text_worker,$player;
     $result=[];
-    $data=json_decode($data);
-    $data->name=$connection->uid;
-    $player[$connection->uid]=$data;
-    var_dump($player);
+    // var_dump($data);
+    // $data=unpack('fx/fy/fangle/ffire',$data);
+    // array_push($data,$connection->uid);
+    $name=pack('f',$connection->uid);
+    // var_dump(unpack('fname',$name));
+    // $data=json_decode($data);
+    // $data->name=$connection->uid;
+    // $player[$connection->uid]=$data;
+    // var_dump($player);
     // $data=json_encode($data);
     // echo $data."\n";
     foreach ($text_worker->connections as $conn) {
         if ($conn != $connection) {
-            $result[]=$player[$conn->uid];
+            // $result[]=$player[$conn->uid];
+            $conn->send($data.$name);
         }
     }
-    if(count($result)>0){
-        $connection->send(json_encode($result));
-    }
+    // if(count($result)>0){
+        // $connection->send(json_encode($result));
+    // }
 }
 
 // 当客户端断开时，广播给所有客户端
@@ -47,7 +55,7 @@ function handle_close($connection)
 }
 
 // 创建一个文本协议的Worker监听2347接口
-$text_worker = new Worker("websocket://0.0.0.0:2347");
+$text_worker = new Worker("websocket://0.0.0.0:2002");
 
 // 只启动1个进程，这样方便客户端之间传输数据
 $text_worker->count = 1;

@@ -15,6 +15,7 @@ export default class Office extends Phaser.Physics.Arcade.Image {
         this.angularV=1+Math.random()*3;
         this.setCircle(110)
         this.setVelocity(this.vx,this.vy);
+        return this;
     }
 
     update(){
