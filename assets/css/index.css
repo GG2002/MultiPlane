@@ -1,0 +1,660 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#main {
+    width: 95%;
+    min-width: 900px;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 10px;
+}
+
+@keyframes waitingRotate {
+    from {
+        transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        /* IE 9 */
+        -webkit-transform: rotate(0deg);
+        /* Safari and Chrome */
+    }
+    to {
+        transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        /* IE 9 */
+        -webkit-transform: rotate(360deg);
+        /* Safari and Chrome */
+    }
+}
+
+@-moz-keyframes waitingRotate
+/* Firefox */
+
+    {
+    from {
+        transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        /* IE 9 */
+        -webkit-transform: rotate(0deg);
+        /* Safari and Chrome */
+    }
+    to {
+        transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        /* IE 9 */
+        -webkit-transform: rotate(360deg);
+        /* Safari and Chrome */
+    }
+}
+
+@-webkit-keyframes waitingRotate
+/* Safari 和 Chrome */
+
+    {
+    from {
+        transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        /* IE 9 */
+        -webkit-transform: rotate(0deg);
+        /* Safari and Chrome */
+    }
+    to {
+        transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        /* IE 9 */
+        -webkit-transform: rotate(360deg);
+        /* Safari and Chrome */
+    }
+}
+
+@-o-keyframes waitingRotate
+/* Opera */
+
+    {
+    from {
+        transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        /* IE 9 */
+        -webkit-transform: rotate(0deg);
+        /* Safari and Chrome */
+    }
+    to {
+        transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        /* IE 9 */
+        -webkit-transform: rotate(360deg);
+        /* Safari and Chrome */
+    }
+}
+
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: -400;
+    }
+}
+
+@-moz-keyframes stroke {
+    100% {
+        stroke-dashoffset: -400;
+    }
+}
+
+@-webkit-keyframes stroke {
+    100% {
+        stroke-dashoffset: -400;
+    }
+}
+
+@-o-keyframes stroke {
+    100% {
+        stroke-dashoffset: -400;
+    }
+}
+
+@keyframes lightChange {
+    0%{
+        box-shadow: 0px -10px 10px #000000;
+    }
+    10% {
+        box-shadow: 0px -10px 10px #FD8A2F;
+    }
+    20% {
+        box-shadow: 0px -10px 10px #136ECB;
+    }
+    40% {
+        box-shadow: 0px -10px 10px #27B89B;
+    }
+    60% {
+        box-shadow: 0px -10px 10px #FF7C24;
+    }
+    80% {
+        box-shadow: 0px -10px 10px #EF4971;
+    }
+    95%{
+        box-shadow: 0px -10px 10px #FD8A2F;
+    }
+    100% {
+        box-shadow: 0px -10px 10px #000000;
+    }
+}
+
+@-webkit-keyframes lightChange {
+    0%{
+        box-shadow: 0px -10px 10px #000000;
+    }
+    10% {
+        box-shadow: 0px -10px 10px #FD8A2F;
+    }
+    20% {
+        box-shadow: 0px -10px 10px #136ECB;
+    }
+    40% {
+        box-shadow: 0px -10px 10px #27B89B;
+    }
+    60% {
+        box-shadow: 0px -10px 10px #FF7C24;
+    }
+    80% {
+        box-shadow: 0px -10px 10px #EF4971;
+    }
+    95%{
+        box-shadow: 0px -10px 10px #FD8A2F;
+    }
+    100% {
+        box-shadow: 0px -10px 10px #000000;
+    }
+}
+
+@-moz-keyframes lightChange {
+    0%{
+        box-shadow: 0px -10px 10px #000000;
+    }
+    10% {
+        box-shadow: 0px -10px 10px #FD8A2F;
+    }
+    20% {
+        box-shadow: 0px -10px 10px #136ECB;
+    }
+    40% {
+        box-shadow: 0px -10px 10px #27B89B;
+    }
+    60% {
+        box-shadow: 0px -10px 10px #FF7C24;
+    }
+    80% {
+        box-shadow: 0px -10px 10px #EF4971;
+    }
+    95%{
+        box-shadow: 0px -10px 10px #FD8A2F;
+    }
+    100% {
+        box-shadow: 0px -10px 10px #000000;
+    }
+}
+
+@-o-keyframes lightChange {
+    0%{
+        box-shadow: 0px -10px 10px #000000;
+    }
+    10% {
+        box-shadow: 0px -10px 10px #FD8A2F;
+    }
+    20% {
+        box-shadow: 0px -10px 10px #136ECB;
+    }
+    40% {
+        box-shadow: 0px -10px 10px #27B89B;
+    }
+    60% {
+        box-shadow: 0px -10px 10px #FF7C24;
+    }
+    80% {
+        box-shadow: 0px -10px 10px #EF4971;
+    }
+    95%{
+        box-shadow: 0px -10px 10px #FD8A2F;
+    }
+    100% {
+        box-shadow: 0px -10px 10px #000000;
+    }
+}
+
+@keyframes door-light-change {
+    0% {
+        background-position: 500% 500%;
+    }
+    20% {
+        background-position: 400% 400%;
+    }
+    40% {
+        background-position: 300% 300%;
+    }
+    60% {
+        background-position: 200% 200%;
+    }
+    80% {
+        background-position: 100% 100%;
+    }
+    100% {
+        background-position: 0 0;
+    }
+}
+
+@-webkit-keyframes rotateIn {
+    0% {
+        -webkit-transform: translate(-50%, -30%) rotate(200deg);
+        transform: translate(-50%, -30%) rotate(200deg);
+        opacity: 0
+    }
+    to {
+        -webkit-transform: translate(-50%, -30%) rotate(0deg);
+        transform: translate(-50%, -30%) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes rotateIn {
+    0% {
+        -webkit-transform: translate(-50%, -30%) rotate(200deg);
+        transform: translate(-50%, -30%) rotate(200deg);
+        background-image: linear-gradient(-155deg, #000000 0%);
+        opacity: 0
+    }
+    20% {
+        background-image: linear-gradient(-155deg, #ffffff 0%, #000000 10%);
+    }
+    40% {
+        background-image: linear-gradient(-155deg, #ffffff 0%, #000000 15%);
+    }
+    60% {
+        background-image: linear-gradient(-155deg, #ffffff 0%, #000000 20%);
+    }
+    80% {
+        background-image: linear-gradient(-155deg, #ffffff 0%, #000000 25%);
+    }
+    100% {
+        -webkit-transform: translate(-50%, -30%) rotate(0deg);
+        transform: translate(-50%, -30%) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes rotateOut {
+    0% {
+        -webkit-transform: translate(-50%, -30%) rotate(0) scale(1);
+        transform: translate(-50%, -30%) rotate(0) scale(1);
+        background-image: linear-gradient(-155deg, #ffffff 0%, #000000 30%);
+        opacity: 1
+    }
+    20% {
+        background-image: linear-gradient(-155deg, #ffffff 0%, #000000 25%);
+    }
+    40% {
+        background-image: linear-gradient(-155deg, #ffffff 0%, #000000 20%);
+    }
+    60% {
+        background-image: linear-gradient(-155deg, #ffffff 0%, #000000 15%);
+    }
+    80% {
+        background-image: linear-gradient(-155deg, #ffffff 0%, #000000 10%);
+    }
+    100% {
+        -webkit-transform: translate(-50%, -30%) rotate(180deg) scale(0);
+        transform: translate(-50%, -30%) rotate(180deg) scale(0);
+        background-image: linear-gradient(-155deg, #000000 0%);
+        opacity: 0;
+    }
+}
+
+@keyframes fade {
+    from {
+        background-image: linear-gradient(45deg, #FD8A2F 0%, #136ECB 20%, #27B89B 40%, #FF7C24 60%, #EF4971 80%, #FD8A2F 100%);
+    }
+    to {
+        /* background-size: 0; */
+    }
+}
+
+/* 登录动画屏幕 */
+
+#welcome {
+    position: fixed;
+    width: 100%;
+    z-index: 999;
+    background-color: transparent;
+    font-size: 0;
+}
+
+#log {
+    position: absolute;
+    z-index: 1;
+    top: 30%;
+    left: 50%;
+    width: 360px;
+    height: 360px;
+    padding: 60px 32px;
+    margin: 20px 0;
+    border-radius: 50%;
+    background-image: linear-gradient(-155deg, #ffffff 0%, #000000 30%);
+    transform: translate(-50%, -30%);
+}
+
+.rotateIn {
+    animation: rotateIn 1s linear;
+}
+
+.rotateOut {
+    animation: rotateOut 1s linear;
+}
+
+.fade {
+    animation: fade 2s;
+}
+
+.door-light-change {
+    animation: door-light-change 20s linear infinite;
+}
+
+.lightChange {
+    animation: lightChange 10s infinite linear;
+}
+
+/* logo */
+
+.text {
+    font-size: 64px;
+    font-weight: bold;
+    fill: none;
+    stroke-width: 2px;
+    stroke-dasharray: 90 310;
+    animation: stroke 6s infinite linear;
+    -webkit-animation: stroke 6s infinite linear;
+    -moz-animation: stroke 6s infinite linear;
+    -o-animation: stroke 6s infinite linear;
+}
+
+.text-1 {
+    stroke: #3498db;
+    text-shadow: 0 0 5px #3498db;
+    animation-delay: -1.5s;
+    -webkit-animation-delay: -1.5s;
+    -moz-animation-delay: -1.5s;
+    -o-animation-delay: -1.5s;
+}
+
+.text-2 {
+    stroke: #f39c12;
+    text-shadow: 0 0 5px #f39c12;
+    animation-delay: -3s;
+    -webkit-animation-delay: -3s;
+    -moz-animation-delay: -3s;
+    -o-animation-delay: -3s;
+}
+
+.text-3 {
+    stroke: #e74c3c;
+    text-shadow: 0 0 5px #e74c3c;
+    animation-delay: -4.5s;
+    -webkit-animation-delay: -4.5s;
+    -moz-animation-delay: -4.5s;
+    -o-animation-delay: -4.5s;
+}
+
+.text-4 {
+    stroke: #9b59b6;
+    text-shadow: 0 0 5px #9b59b6;
+    animation-delay: -6s;
+    -webkit-animation-delay: -6s;
+    -moz-animation-delay: -6s;
+    -o-animation-delay: -6s;
+}
+
+/* 登录界面 */
+
+.log {
+    position: relative;
+    margin: 0 10px;
+    color: #ffffff;
+}
+
+.log:nth-child(3) {
+    margin-top: 20px;
+}
+
+.user {
+    width: 100%;
+    background-color: transparent;
+    border: 0;
+    outline: none;
+    border-bottom: 1px solid #ffffff;
+    font-size: 20px;
+    color: #ffffff;
+    font-weight: 100;
+}
+
+.user-text {
+    position: absolute;
+    top: -4px;
+    left: 0;
+    transition: all .5s;
+    font-size: 20px;
+    color: rgb(255, 255, 255);
+    font-weight: 100;
+}
+
+.underline {
+    position: absolute;
+    z-index: 100;
+    top: 23.5px;
+    display: block;
+    width: 100%;
+    height: 2px;
+    transform: scaleX(0);
+    transition: all .3s ease-in;
+}
+
+.user:focus~.user-text {
+    top: -18px;
+    font-size: 14px;
+}
+
+.user:valid~.user-text {
+    top: -18px;
+    font-size: 14px;
+}
+
+.user:focus~.underline {
+    transform: scaleX(1);
+    z-index: 100;
+    background-color: #EF4971;
+    transform-origin: center center;
+}
+
+.login {
+    margin: 0 auto;
+    display: block;
+    width: 80%;
+    font-size: large;
+    margin-top: 10px;
+    color: #ffffff;
+    border-radius: 18px;
+    background-image: linear-gradient(90deg, #9b59b6 0%, #e74c3c 100%);
+    filter: brightness(0.8);
+    transition: all .3s;
+}
+
+.login:hover {
+    filter: brightness(1);
+}
+
+/* 登录背景板 */
+
+#welcome-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background-size: 500%;
+    background-image: linear-gradient(45deg, #FD8A2F 0%, #136ECB 20%, #27B89B 40%, #FF7C24 60%, #EF4971 80%, #FD8A2F 100%);
+}
+
+.log-door {
+    display: inline-block;
+    background-color: #000000;
+    position: absolute;
+    z-index: 0;
+}
+
+.log-door svg {
+    height: 100%;
+    width: 100%;
+}
+
+.log-door path {
+    stroke-width: 3;
+}
+
+.door-right:nth-child(4n+4), .door-left:nth-child(4n+1) {
+    height: 17.9%;
+    width: 44.9%;
+}
+
+.door-right:nth-child(4n+2), .door-left:nth-child(4n+3) {
+    height: 16.5%;
+    width: 55%;
+}
+
+.door-right {
+    right: 0;
+    margin-left: 0.05%;
+}
+
+.door-left {
+    margin-right: 0.05%;
+}
+
+/* 顶部状态栏 */
+
+/* 头像及昵称 */
+
+#infor {
+    height: fit-content;
+    width: 100%;
+    border: 4px solid #000000;
+}
+
+#user-infor {
+    margin: 10px 5px 10px 20px;
+    display: flex;
+    align-items: center;
+}
+
+#avatar {
+    width: 100px;
+    height: 100px;
+    border: 2px solid #000000;
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+#avatar img {
+    width: 100%;
+}
+
+#user-infor span {
+    font-size: x-large;
+    font-weight: 600;
+}
+
+/* 界面body布局 */
+
+#main-body {
+    display: flex;
+}
+
+/* 升级 */
+
+#upgrade {
+    margin-top: 20px;
+    width: 300px;
+    height: 500px;
+    border: 2px solid #000000;
+}
+
+/* 待战中 */
+
+#status {
+    width: 300px;
+    margin: 0 auto;
+    margin-top: 50px;
+    text-align: center;
+}
+
+#num {
+    font-size: x-large;
+    margin-bottom: 8px;
+}
+
+#status-num {
+    color: #136ECB;
+}
+
+#status img {
+    animation: waitingRotate 5s linear infinite;
+    /* Firefox */
+    -moz-animation: waitingRotate 5s linear infinite;
+    /* Safari 和 Chrome */
+    -webkit-animation: waitingRotate 5s linear infinite;
+    /* Opera */
+    -o-animation: waitingRotate 5s linear infinite;
+    width: 100%;
+}
+
+#status-body {
+    position: relative;
+}
+
+#status-waiting {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: xx-large;
+    color: #136ECB;
+}
+
+/* 房间列表 */
+
+#roomlist {
+    margin-top: 20px;
+    width: 300px;
+    height: fit-content;
+    min-height: 400px;
+    border: 2px solid #000000;
+}
+
+#tip {
+    font-size: large;
+    margin: 50%;
+}
+
+/* 对战模式 */
+
+#play-mode-list {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    column-count: 4;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.mode {
+    border: 2px solid #000000;
+    padding: 5px;
+    margin-left: 14.4%;
+    margin-top: 20px;
+}
