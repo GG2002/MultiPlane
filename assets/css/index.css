@@ -436,6 +436,29 @@
     }
 }
 
+@keyframes flash {
+    0% {
+        filter: brightness(1.1);
+    }
+    2% {
+        filter: brightness(1.4);
+    }
+    4% {
+        filter: brightness(1.3);
+    }6% {
+        filter: brightness(1.2);
+    }
+    8% {
+        filter: brightness(1.5);
+    }
+    90% {
+        filter: brightness(1.6);
+    }
+    100% {
+        filter: brightness(1.1);
+    }
+}
+
 /* 登录动画屏幕 */
 
 #welcome {
@@ -448,16 +471,38 @@
 
 #log {
     position: absolute;
+    z-index: 2;
+    top: 65%;
+    left: 50%;
+    width: 0px;
+    height: 0px;
+    padding: 0;
+    margin: 20px 0;
+    transform: translate(-50%, -105%);
+    background-color: rgba(0, 120, 200, 0.3);
+    border: 0;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 1px #ffffff inset;
+}
+
+#log-bg {
+    position: absolute;
     z-index: 1;
-    top: 30%;
+    top: 65%;
     left: 50%;
     width: 360px;
     height: 360px;
     padding: 60px 32px;
     margin: 20px 0;
-    border-radius: 50%;
-    background-image: linear-gradient(-155deg, #ffffff 0%, #000000 30%);
-    transform: translate(-50%, -30%);
+    transform: translate(-50%, -105%);
+    border-radius: 5px;
+    box-shadow: 0 -5px 10px 5px #ffffff;
+    filter: blur(20px);
+    background-image: linear-gradient(0deg, #ffffff 0%, #dbdbdb 5%, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 0));
+}
+
+.flash {
+    animation: flash 5s infinite;
 }
 
 .rotateIn {
@@ -594,6 +639,7 @@
 .login {
     margin: 0 auto;
     display: block;
+    opacity: 0;
     width: 80%;
     font-size: large;
     margin-top: 10px;
@@ -635,12 +681,12 @@
     stroke-width: 3;
 }
 
-.door-right:nth-child(4n+4), .door-left:nth-child(4n+1) {
+.door-right:nth-child(4n+5), .door-left:nth-child(4n+2) {
     height: 17.9%;
     width: 44.9%;
 }
 
-.door-right:nth-child(4n+2), .door-left:nth-child(4n+3) {
+.door-right:nth-child(4n+3), .door-left:nth-child(4n+4) {
     height: 16.5%;
     width: 55%;
 }
