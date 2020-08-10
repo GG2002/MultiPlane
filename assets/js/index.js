@@ -17,6 +17,10 @@ window.onload = e => {
     }
     let dbHeight = $(document.body).height();
     console.log(dbHeight)
+    $("#log").addClass('rotateIn');
+    setTimeout(()=>{
+        $('#log').css('opacity',1);
+    },800)
     $("#welcome").css('height', dbHeight + 'px')
     setTimeout(() => {
         $("#log").removeClass('rotateIn')
