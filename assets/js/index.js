@@ -23,9 +23,9 @@ function logAnimateIn() {
     welcomeBGIn();
     $(".log-light").animate({
         opacity: '1'
-    }, 1000).animate({
+    }, 300).animate({
         width: "800px"
-    });
+    },100);
     setTimeout(() => {
         $(".log-light").animate({
             height: "360px"
@@ -33,23 +33,23 @@ function logAnimateIn() {
         setTimeout(() => {
             $("#log").animate({
                 opacity: "1",
-            }, 1500).animate({
+            }, 800).animate({
                 border: '1px solid #ffffff'
-            }).animate({
+            },100).animate({
                 padding: "60px 32px",
-            },300).css("backgroundColor", "rgba(0, 120, 200, 0.3)").css("box-shadow", "0 0 10px 1px #ffffff inset").addClass("flash");
+            },200).css("backgroundColor", "rgba(0, 120, 200, 0.3)").css("box-shadow", "0 0 10px 1px #ffffff inset").addClass("flash");
             $(".log-light").addClass("flash");
 
             setTimeout(() => {
-                $("#logo").fadeIn(1000);
-                $(".log").fadeIn(1500);
-                $("#log-bg").fadeIn(2000);
+                $("#logo").fadeIn(500);
+                $(".log").fadeIn(750);
+                $("#log-bg").fadeIn(1000);
                 $(".login").animate({
                     opacity: "1"
-                }, 1500);
-            }, 1000)
-        }, 1000)
-    }, 1000)
+                }, 750);
+            }, 500)
+        }, 300)
+    }, 300)
 
 }
 function logAnimateOut() {
@@ -70,11 +70,11 @@ function logAnimateOut() {
     setTimeout(() => {
         $(".log-light").animate({
             height: "0"
-        }, 300).fadeOut();
+        }, 200).fadeOut();
         setTimeout(() => {
             welcomeBGOut()
-        }, 800);
-    }, 1500)
+        }, 500);
+    }, 1000)
 
 }
 function welcomeBGIn() {
