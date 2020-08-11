@@ -445,7 +445,8 @@
     }
     4% {
         filter: brightness(1.3);
-    }6% {
+    }
+    6% {
         filter: brightness(1.2);
     }
     8% {
@@ -470,19 +471,49 @@
 }
 
 #log {
-    position: absolute;
+    position: relative;
     z-index: 2;
     top: 65%;
     left: 50%;
-    width: 0px;
-    height: 0px;
+    width: 360px;
+    height: 360px;
     padding: 0;
     margin: 20px 0;
     transform: translate(-50%, -105%);
-    background-color: rgba(0, 120, 200, 0.3);
+    background-color: transparent;
     border: 0;
     border-radius: 5px;
-    box-shadow: 0 0 10px 1px #ffffff inset;
+}
+
+#log-light{
+    position: absolute;
+    z-index: 1;
+    top: 16%;
+    height: 360px;
+    width: 360px;
+    transform:perspective(30px) rotatey(0deg) translateX(50%);
+	transform-style:preserve-3d;
+}
+.log-light {
+    position: absolute;
+    top: 0;
+    width: 10px;
+    opacity: 0;
+    height: 0;
+}
+
+.log-light-left {
+    left: -550px;
+    box-shadow: -2px -8px 3px 1px rgba(255,255,255,0.3);
+    background-image: linear-gradient(-90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.2) 2%, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 0));
+    transform: rotateY(80deg) translateZ(-10px) translateX(399px);
+}
+
+.log-light-right {
+    left: -230px;
+    box-shadow: -2px -8px 3px 1px rgba(255,255,255,0.3);
+    background-image: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.2) 2%, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 0));
+    transform: rotateY(80deg) translateZ(5px) translateX(401px);
 }
 
 #log-bg {
@@ -681,12 +712,12 @@
     stroke-width: 3;
 }
 
-.door-right:nth-child(4n+5), .door-left:nth-child(4n+2) {
+.door-right:nth-child(4n+2), .door-left:nth-child(4n+3) {
     height: 17.9%;
     width: 44.9%;
 }
 
-.door-right:nth-child(4n+3), .door-left:nth-child(4n+4) {
+.door-right:nth-child(4n), .door-left:nth-child(4n+1) {
     height: 16.5%;
     width: 55%;
 }

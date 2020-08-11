@@ -1,9 +1,9 @@
 window.onload = e => {
-    welcomeBGIn();
+    let dbWidth = $(document.body).width();
+    $("#log-light").css("left", (dbWidth / 2 - 190) + "px")
     logAnimateIn();
     $(".login").click(function () {
         logAnimateOut();
-        welcomeBGOut();
     })
 }
 window.onresize = e => {
@@ -16,49 +16,66 @@ window.onresize = e => {
     door_right.forEach((e, w) => {
         e.style.top = w * dbHeight / 6 + 'px';
     })
+    let dbWidth = $(document.body).width();
+    $("#log-light").css("left", (dbWidth / 2 - 190) + "px")
 }
 function logAnimateIn() {
-    $("#log").animate({
-        opacity: "1",
-        border: '1px solid #ffffff',
-    }).animate({
-        width: "360px"
-    }).animate({
-        height: "360px",
-        padding: "60px 32px",
-    })
+    welcomeBGIn();
+    $(".log-light").animate({
+        opacity: '1'
+    }, 1000).animate({
+        width: "800px"
+    });
     setTimeout(() => {
-        $("#logo").fadeIn(1000);
-        $(".log").fadeIn(1500);
-        $("#log-bg").fadeIn(2000);
-        $(".login").animate({
-            opacity: "1"
-        }, 2000);
-        $("#log").addClass("flash");
-    }, 1500)
+        $(".log-light").animate({
+            height: "360px"
+        });
+        setTimeout(() => {
+            $("#log").animate({
+                opacity: "1",
+            }, 1500).animate({
+                border: '1px solid #ffffff'
+            }).animate({
+                padding: "60px 32px",
+            },300).css("backgroundColor", "rgba(0, 120, 200, 0.3)").css("box-shadow", "0 0 10px 1px #ffffff inset").addClass("flash");
+            $(".log-light").addClass("flash");
+
+            setTimeout(() => {
+                $("#logo").fadeIn(1000);
+                $(".log").fadeIn(1500);
+                $("#log-bg").fadeIn(2000);
+                $(".login").animate({
+                    opacity: "1"
+                }, 1500);
+            }, 1000)
+        }, 1000)
+    }, 1000)
 
 }
 function logAnimateOut() {
+    $(".login").fadeOut(400)
+    $(".log").fadeOut(400)
     $("#log").animate({
-        opacity: "1",
-        height: "0px",
-        padding: "0"
-    }).animate({
-        width: "0"
-    }).animate({
+        padding: "0",
         border: '0'
-    })
-    $(".login").fadeOut()
-    $(".log").fadeOut()
+    }).animate({
+        opacity: "0",
+    }, 500);
     $("#log-bg").animate({
-        opacity: "1",
-        height: "0px",
+        opacity: "0",
         padding: "0"
-    }).animate({
-        width: "0"
     }).animate({
         border: '0'
     })
+    setTimeout(() => {
+        $(".log-light").animate({
+            height: "0"
+        }, 300).fadeOut();
+        setTimeout(() => {
+            welcomeBGOut()
+        }, 800);
+    }, 1500)
+
 }
 function welcomeBGIn() {
     let pathEls = document.querySelectorAll('path');
@@ -103,7 +120,7 @@ function welcomeBGOut() {
         });
         setTimeout(() => {
             $("#welcome").fadeOut(2500);
-            $("#main").fadeIn(3000);
+            $("#main").fadeIn(2000);
         }, 700);
     }, 1200)
 }
