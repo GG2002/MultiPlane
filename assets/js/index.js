@@ -1,11 +1,18 @@
-window.onload = e => {
-    let dbWidth = $(document.body).width();
-    $("#log-light").css("left", (dbWidth / 2 - 190) + "px")
-    logAnimateIn();
-    $(".login").click(function () {
-        logAnimateOut();
-    })
-}
+$(() => {
+    if (0) {
+        welcomeBGIn();
+        welcomeBGOut();
+    } else {
+        wav = new Audio("assets/door.mp3");
+        wav.load();
+        let dbWidth = $(document.body).width();
+        $("#log-light").css("left", (dbWidth / 2 - 190) + "px");
+        logAnimateIn();
+        $(".login").click(function () {
+            logAnimateOut();
+        })
+    }
+})
 window.onresize = e => {
     let dbHeight = $(document.body).height();
     let door_left = document.querySelectorAll('.door-left');
@@ -25,7 +32,22 @@ function logAnimateIn() {
         opacity: '1'
     }, 300).animate({
         width: "800px"
-    },100);
+    }, 100);
+    window.onclick = e => {
+        $(".log-light").animate({
+            opacity: "1",
+            height: "360px",
+        }, 100).addClass("flash");
+        $("#log").animate({
+            opacity: "1",
+            border: '1px solid #ffffff',
+            padding: "60px 32px",
+        }, 100).css("backgroundColor", "rgba(0, 120, 200, 0.3)").css("box-shadow", "0 0 10px 1px #ffffff inset").addClass("flash");
+        $("#logo,#log-bg,.log").fadeIn(100);
+        $(".login").animate({
+            opacity: "1"
+        }, 100);
+    }
     setTimeout(() => {
         $(".log-light").animate({
             height: "360px"
@@ -35,9 +57,9 @@ function logAnimateIn() {
                 opacity: "1",
             }, 800).animate({
                 border: '1px solid #ffffff'
-            },100).animate({
+            }, 100).animate({
                 padding: "60px 32px",
-            },200).css("backgroundColor", "rgba(0, 120, 200, 0.3)").css("box-shadow", "0 0 10px 1px #ffffff inset").addClass("flash");
+            }, 200).css("backgroundColor", "rgba(0, 120, 200, 0.3)").css("box-shadow", "0 0 10px 1px #ffffff inset").addClass("flash");
             $(".log-light").addClass("flash");
 
             setTimeout(() => {
@@ -47,14 +69,32 @@ function logAnimateIn() {
                 $(".login").animate({
                     opacity: "1"
                 }, 750);
+                setTimeout(() => {
+                    window.onclick = null;
+                }, 1000)
             }, 500)
         }, 300)
     }, 300)
 
 }
 function logAnimateOut() {
-    $(".login").fadeOut(400)
-    $(".log").fadeOut(400)
+    setTimeout(() => {
+        window.onclick = () => {
+            $(".login,.log").fadeOut(100)
+            $("#log,#log-bg").animate({
+                padding: "0",
+                border: '0',
+                opacity: "0",
+            }, 100);
+            $(".log-light").animate({
+                height: "0"
+            }, 100).fadeOut(100);
+            setTimeout(() => {
+                welcomeBGOut()
+            }, 100);
+        }
+    }, 100)
+    $(".login,.log").fadeOut(400)
     $("#log").animate({
         padding: "0",
         border: '0'
@@ -118,9 +158,11 @@ function welcomeBGOut() {
             translateX: -580,
             delay: anime.stagger(100) // 每个元素的延迟增加100毫秒。
         });
+        wav.play();
         setTimeout(() => {
             $("#welcome").fadeOut(2500);
             $("#main").fadeIn(2000);
+            window.onclick = null;
         }, 700);
     }, 1200)
 }
